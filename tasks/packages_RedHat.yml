@@ -1,0 +1,28 @@
+---
+# This file is not included by default. It can be included via a task:
+# include: "packages_{{ ansible_os_family }}.yml"
+
+- name: Install OS Dependencies
+  yum: name={{ item }} state=present update_cache=yes
+  become: true
+  with_items:
+    # The uri module requires httplib2, prior to Ansible 2.1.
+    - python-httplib2
+
+- name: Jenkins YUM Repository
+  yum_repository:
+    name: Jenkins
+    description: Jenkins YUM Repository
+    baseurl: "http://pkg.jenkins.io/redhat"
+    gpgkey: "http://pkg.jenkins.io/redhat/jenkins.io.key"
+    state: present
+  become: true
+
+- name: Jenkins Install
+  yum:
+    name: jenkins
+    # Setting this to 'latest' is perhaps debatable, but it seems silly not to
+    # since this plugin also updates all of the Jenkins plugins automatically.
+    state: latest
+    update_cache: yes
+  become: true
