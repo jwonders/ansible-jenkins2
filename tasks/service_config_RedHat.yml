@@ -26,7 +26,7 @@
   lineinfile:
     dest: /etc/sysconfig/jenkins
     regexp: '^JENKINS_ARGS='
-    line: 'JENKINS_ARGS="--webroot=/var/cache/$NAME/war --httpPort=$HTTP_PORT --prefix=$PREFIX"'
+    line: 'JENKINS_ARGS="--webroot=/var/cache/jenkins/war --httpPort=$HTTP_PORT --prefix=$PREFIX"'
   become: true
   notify:
     - "Restart Service 'jenkins'"
