@@ -21,12 +21,23 @@
   notify:
     - "Restart Service 'jenkins'"
 
+- name: Disable SSL
+  lineinfile:
+    dest: /etc/sysconfig/jenkins
+    regexp: ^{{ item }}=
+    state: absent
+  with_items:
+    - JENKINS_HTTPS_PORT
+    - JENKINS_HTTPS_KEYSTORE
+    - JENKINS_HTTPS_KEYSTORE_PASSWORD
+    - JENKINS_HTTPS_LISTEN_ADDRESS
+    
 # This is required because the default args don't include the '--prefix' option.
 - name: Configure Command Line Arguments
   lineinfile:
     dest: /etc/sysconfig/jenkins
     regexp: '^JENKINS_ARGS='
-    line: 'JENKINS_ARGS="--webroot=/var/cache/jenkins/war --httpPort=$HTTP_PORT --prefix=$PREFIX"'
+    line: 'JENKINS_ARGS="--webroot=/var/cache/jenkins/war --httpPort=$JENKINS_PORT --prefix=$PREFIX"'
   become: true
   notify:
     - "Restart Service 'jenkins'"
